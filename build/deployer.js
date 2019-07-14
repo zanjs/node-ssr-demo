@@ -1,4 +1,4 @@
-const deploy = require("./deployer/deployer");
+const deploy = require("deployer-next");
 const base_dir = process.cwd();
 const public_dir = `${base_dir}/dist`;
  

@@ -1,9 +1,9 @@
 import md5 from 'md5';
 
 // 引入公共样式
-import '../../less/common/common.less';
-import '../../less/common/nav.less';
-import '../../less/user/user.less'
+import '../../scss/_common/common.scss';
+import '../../scss/user/user.scss';
+
 console.log('user');
 console.log('user', window.location);
 

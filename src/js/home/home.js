@@ -1,10 +1,10 @@
 import md5 from 'md5';
-import '../../less/common/common.less';
-import '../../less/common/nav.less';
+import '../../scss/_common/common.scss';
+import '../../scss/_common/nav.scss';
 
-import '../../less/home/home.less'
+import '../../scss/home/home.scss';
 import img from '../../img/ww.jpg'
-console.log(111);
+console.log(img);
 
 let add = (a, b) => a + b;
 
