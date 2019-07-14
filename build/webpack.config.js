@@ -12,6 +12,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const entry = require('./webpack.entry');
 const hostCDN = '/'
 // const hostCDN = 'http://127.0.0.1:5000/'
+const njktemplate = {
+  'template': 'template',
+  'error': 'error'
+}
 
 module.exports = evn => ({
   mode: evn.production ? 'production' : 'development',
@@ -142,10 +146,14 @@ module.exports = evn => ({
         to: path.resolve('views/_component')
       }
     ]),
+    ...Object.keys(njktemplate).map(item => new NJKHtmlWebpackPlugin({
+      inject: false,
+      filename: path.resolve('views/'+ item +'.html'),
+      template: path.resolve('src/views/' + item + '.html')
+    })),
     ...Object.keys(entry).map(item => new NJKHtmlWebpackPlugin({
       inject: false,
       filename: path.resolve('views/' + entry[item].split('/').slice(-2).join('/').replace('js', 'html')),
-      // 基准页面
       template: path.resolve('src/views/' + entry[item].split('/').slice(-2).join('/').replace('js', 'html'))
     })),
     // HtmlWebpackPlugin 每个入口生成一个html 并引入对应打包生产好的js

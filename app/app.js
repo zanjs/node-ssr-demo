@@ -1,34 +1,52 @@
-// 引入koa
-const Koa = require('koa')
-const Routers = require('./routers/index.js')
-const nunjucksMiddleware = require('./middlewares/nunjucksMiddleware.js')
-const path = require('path')
-let logger = require('./util/logger.js')
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+// var logger = require('morgan');
+var nunjucks = require('nunjucks');
+var log4js = require('log4js');
 
-// //不同类型的 log
-// logger.debug('debug-->', 'debug log');
-// logger.info('info-->', 'info log');
-// logger.warn('warn-->', 'warn log');
-// logger.error('error-->', 'error log');
-// logger.fatal('fatal-->', 'fatal log');
+var log = log4js.getLogger("app");
 
-// 实例化koa对象
-let app = new Koa()
+var logger = log4js.getLogger('app');
 
-// 静态资源
-app.use(require('koa-static')(path.resolve('dist')))
+const myLog = require('./middlewares/myLogger');
+const setUpNunjucks = require('./helpers/nunjucks_helpers.js');
+var indexRouter = require('./routes/home');
+var usersRouter = require('./routes/users');
 
-// 初始化中间件
-app.use(nunjucksMiddleware({
-  path: path.resolve(__dirname, '../views')
-}))
+var app = express();
+app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'auto' }));
 
-// 挂载路由
-app.use((new Routers(app)).allowedMethods())
+app.use(myLog)
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+setUpNunjucks(app)
 
-// 监听3000端口
-app.listen(3000, () => {
-  console.log('服务器启动 http://127.0.0.1:3000')
-  // 服务启动后的logger
-  logger.info('server start');
-})
+// app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static('dist'));
+
+app.use('/', indexRouter);
+app.use('/user', usersRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;

@@ -1,13 +1,22 @@
 <!-- njk继承模板 -->
 {% extends "../_layout/home/home.html" %}
+{% block head %}
+<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
-  <!-- njk引入公共模块 -->
   {% include "../_component/nav.html" %}
-  <h1>待办事项</h1>
+  <h1>请求数据</h1>
+  <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+    <span>Download</span>
+  </button>
   <ul class="list">
-    <!-- 过滤器的调用 timeFormate即我们在中间件中给njk加的过滤器 -->
-    {% for item in todoList %}
-      <li>{{item.name}} ---> {{item.time | timeFormate}}</li>
+    {% for item in list %}
+      <li>{{item.id}} ---> {{item.created | timeFormate}}
+        <div>
+          {{ item.title }}
+        </div>
+      </li>
     {% endfor %}
   </ul>
   <div class="bg-img"> 背景图</div>
